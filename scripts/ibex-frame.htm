@@ -1,0 +1,13 @@
+<html><!--
+This page is on the same domain as the parent,so can
+communicate with it to order the iframe window resizing
+to fit the content
+--><body onload="parentIframeResize()"><script language="javascript"type="text/javascript">var MyMsgAgent='';function parentIframeResize()
+{var height=getParam('height');parent.parent.resizeIframe(height);}
+function getParam(name)
+{name=name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");var regexS="[\\?&]"+name+"=([^&#]*)";var regex=new RegExp(regexS);var results=regex.exec(window.location.href);if(results==null)
+return"";else
+return results[1];}
+function LoadSeekomFrame(frameId)
+{var frame=document.getElementById(frameId);var sep=window.location.search==''?'?':'&';frame.src=window.location.protocol+'//ibex.seekom.com/accommodation/Property.php'+window.location.search+
+(MyMsgAgent==''?'':(sep+'hostma='+window.location.protocol+'//'+escape(MyMsgAgent)));}</script></body></html>

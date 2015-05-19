@@ -1,0 +1,721 @@
+/*
+ * iBex Booking Widgets
+ *
+ * Copyright 2012, iBex Online Booking
+ * http://ibexplus.com/widgets/rate-calendar
+ */
+/* CSS Document */
+/* ----- tool tip specific styles ----- */
+/* 	-------------- Calendar color scheme --------------
+	To add a new color scheme copy and paste the colour scheme template then
+   	- Replace {myColorName} with ibexBuilder.CustomColorScheme in accom-multi-rate-calendar.htm file
+   	- Replace {myColorCode} with your custom color code.
+   
+   	you can get html color code from http://www.w3schools.com/tags/ref_colorpicker.asp
+   
+   	---- COPY COLOUR SCHEME TEMPLATE BELOW ------
+   	.{myColorName} table {border-color: {myColorCode};}
+	.{myColorName} tr.oddrow {background-color: {myColorCode};}
+	.{myColorName} tr.evenrow {background-color: {myColorCode};}
+	
+	.{myColorName} tr.header {background-color: {myColorCode}; color: {myColorCode};}
+	.{myColorName} tr.footer, .{myColorName} a.footer {background-color: {myColorCode}; color: {myColorCode};}
+	
+	.{myColorName} td.onreq_odd {background-color: {myColorCode}; }
+	.{myColorName} td.onreq_even {background-color: {myColorCode}; }
+	.{myColorName} td.available_odd {background-color: {myColorCode}; }
+	.{myColorName} td.available_even {background-color: {myColorCode}; }
+	
+	.{myColorName} .ui-widget-header { background-color: {myColorCode}; border-color: {myColorCode}; }
+	.{myColorName} .ui-state-hover {background-color: {myColorCode}; border-color: {myColorCode}; }
+	.{myColorName} .ui-state-active {background-color: {myColorCode}; border-color: {myColorCode}; color: {myColorCode}; }
+	.{myColorName} .ui-state-highlight,
+	.{myColorName} .ui-state-highlight:hover{
+		background: #F8DA4E;
+		border: 1px solid #FCD113;
+		color: #915608;
+	}
+
+*/
+/* ---- Colour Scheme Navy ---- */
+/* ---- Colour Scheme Brown ---- */
+/* ---- Colour Scheme Green ---- */
+/* ---- Colour Scheme Orange ---- */
+/* ---- Colour Scheme Pink ---- */
+/* ---- Colour Scheme Purple ---- */
+/* ---- Colour Scheme Purple ---- */
+/* ---- Colour Scheme Slate ---- */
+html,
+body,
+table {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 9pt;
+  margin: 0 auto;
+  text-align: center;
+}
+tr.oddrow {
+  background-color: #CCCCFF;
+}
+tr.evenrow {
+  background-color: #DFE3FF;
+}
+tr.header {
+  background-color: #336699;
+  color: #ffffff;
+}
+tr.footer,
+a.footer {
+  background-color: #336699;
+  color: #ffffff;
+}
+td.onreq_odd {
+  background: #CCCCFF url(on_request.gif) no-repeat 100% 0;
+  width: 60px;
+  text-align: center;
+}
+td.onreq_even {
+  background: #DFE3FF url(on_request.gif) no-repeat 100% 0;
+  width: 60px;
+  text-align: center;
+}
+td.available_odd {
+  background: #CCCCFF url(available.gif) no-repeat 100% 0;
+  width: 60px;
+  text-align: center;
+}
+td.available_even {
+  background: #DFE3FF url(available.gif) no-repeat 100% 0;
+  width: 60px;
+  text-align: center;
+}
+td.sold {
+  color: red;
+  width: 60px;
+  text-align: center;
+}
+td.roomrate {
+  color: #161616;
+}
+td.maxguests {
+  color: #161616;
+}
+td.minstay {
+  color: #161616;
+}
+html,
+body,
+ul,
+ol,
+li,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+form,
+fieldset,
+a,
+div,
+img,
+blockquote {
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+.center {
+  text-align: center;
+  margin: 0 auto;
+}
+a {
+  color: #161616;
+  text-decoration: none;
+}
+.calendarTable {
+  border-collapse: collapse;
+}
+.calendarTableFooter {
+  border-width: 0px 1px 1px 1px;
+  border-style: solid;
+  border-color: #ffffff;
+  border-collapse: collapse;
+}
+#theToolTip {
+  position: absolute;
+  left: -300px;
+  width: 200px;
+  border: 2px solid #C0C09F;
+  padding: 6px 0px 0px 10px;
+  background-color: #FFFFCC;
+  visibility: hidden;
+  /*Remove below line to remove shadow. Below line should always appear last within this CSS */
+  z-index: 100;
+  filter: progid:DXImageTransform.Microsoft.Shadow(color=gray,direction=135,strength=4);
+}
+#ToolTipPointer {
+  position: absolute;
+  left: -300px;
+  z-index: 101;
+  visibility: hidden;
+}
+#theToolTip p {
+  font-size: 1.1em;
+  color: #333333;
+  line-height: 1.4em;
+  margin-right: 10px;
+  margin-top: 0;
+}
+#ToolTipTextWrap {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #ff6600;
+  margin-right: 10px;
+}
+.addToolTip {
+  cursor: pointer;
+}
+.nullLink {
+  cursor: pointer;
+}
+form div {
+  clear: both;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+form input,
+form select {
+  border-color: #ACACAC #E1E1E1 #E1E1E1 #ACACAC;
+  border-style: solid;
+  border-width: 2px;
+  float: left;
+  font: normal 12px Arial, sans-serif;
+  margin-right: 6px;
+  width: 60px;
+}
+form input {
+  padding: 1px 3px;
+}
+form label {
+  float: left;
+  margin-right: 6px;
+  text-align: right;
+  width: 60px;
+}
+input.dashboard,
+select.dashboard {
+  width: 149px;
+}
+button.dashboard {
+  background: url(dashboard-icon.gif);
+  border: 0;
+  cursor: pointer;
+  float: left;
+  height: 20px;
+  margin-right: 20px;
+  width: 20px;
+}
+button.dashboard:hover,
+button.dashboard.active {
+  background-position: 0 20px;
+}
+div.dashboard {
+  background: url(dashboard2.png);
+  height: 180px;
+  padding: 0 12px;
+  text-align: center;
+  width: 147px;
+}
+div.dashboard * {
+  margin: 0;
+  padding: 0;
+}
+div.dashboard div {
+  background: none !important;
+  cursor: move;
+  height: 170px;
+  overflow: hidden;
+  padding-top: 10px;
+  position: relative;
+  width: 147px;
+}
+div.dashboard caption {
+  color: #CF0;
+  font: normal 12px/17px Arial, Helvetica, sans-serif;
+  padding-top: 4px;
+  text-align: center;
+  width: 100%;
+}
+div.dashboard caption a {
+  cursor: pointer;
+  display: block;
+  height: 11px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: -100px;
+  top: 16px;
+  width: 11px;
+}
+div.dashboard caption a.prev {
+  background-image: url(dashboard-prev.gif);
+  left: 1px;
+}
+div.dashboard caption a.next {
+  background-image: url(dashboard-next.gif);
+  right: 1px;
+}
+div.dashboard caption a:hover {
+  background-position: 0 11px;
+}
+div.dashboard caption span {
+  height: 25px;
+  position: relative;
+  text-align: center;
+}
+div.dashboard caption span.month {
+  padding-right: 8px;
+}
+div.dashboard caption span.month:after {
+  content: ',';
+}
+div.dashboard table {
+  border: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  cursor: default;
+  margin: 0 auto;
+  overflow: hidden;
+  width: 147px;
+}
+div.dashboard td,
+div.dashboard th {
+  border: 0;
+  color: #999;
+  font: normal 12px Arial, Helvetica, sans-serif;
+  height: 19px;
+  text-align: center;
+  width: 21px;
+}
+div.dashboard td {
+  color: #333;
+  font-size: 11px;
+  padding-right: 5px;
+  text-align: right;
+  width: 16px;
+}
+div.dashboard td.invalid {
+  color: #666;
+}
+div.dashboard td.valid {
+  color: #FFF;
+  cursor: pointer;
+}
+div.dashboard td.active,
+div.dashboard td.hover {
+  color: #CF0;
+  cursor: pointer;
+}
+.content-busy {
+  position: relative;
+}
+.content-busy .loading-calendar {
+  position: absolute;
+  opacity: .7;
+  background: #ffffff url(ajax-loader-large.gif) no-repeat center;
+  z-index: index;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  vertical-align: middle;
+}
+.ui-widget-header .ui-icon {
+  background-image: url("theme/images/ui-icons_d8e7f3_256x240.png");
+}
+.ui-state-hover {
+  background-color: #336699;
+  color: #FFFFFF;
+  border: 1px solid #336699;
+  opacity: 0.5;
+}
+.ui-state-active.ui-state-hover {
+  opacity: 1;
+}
+.ui-state-highlight,
+.ui-state-highlight:hover {
+  background: #F8DA4E;
+  border: 1px solid #FCD113;
+  color: #915608;
+  opacity: 1;
+}
+.navy tr.oddrow {
+  background-color: #F4F1E7;
+}
+.navy tr.evenrow {
+  background-color: #FCFCFC;
+}
+.navy tr.header {
+  background-color: #2D61A6;
+  color: #FFFFFF;
+}
+.navy tr.footer,
+.navy a.footer {
+  background-color: #2D61A6;
+  color: #FFFFFF;
+}
+.navy td.onreq_odd {
+  background-color: #F4F1E7;
+}
+.navy td.onreq_even {
+  background-color: #FCFCFC;
+}
+.navy td.available_odd {
+  background-color: #F4F1E7;
+}
+.navy td.available_even {
+  background-color: #FCFCFC;
+}
+.navy .ui-widget-header {
+  background-color: #2D61A6;
+  border-color: #2D61A6;
+}
+.navy .ui-state-hover {
+  background-color: #2D61A6;
+  border-color: #2D61A6;
+}
+.navy .ui-state-active {
+  background-color: #2D61A6;
+  border-color: #2D61A6;
+  color: #FFFFFF;
+}
+.navy .ui-state-highlight,
+.navy .ui-state-highlight:hover {
+  background: #F8DA4E;
+  border: 1px solid #FCD113;
+  color: #915608;
+}
+.brown tr.oddrow {
+  background-color: #F4F1E7;
+}
+.brown tr.evenrow {
+  background-color: #FCFCFC;
+}
+.brown tr.header {
+  background-color: #7E634C;
+  color: #FFFFFF;
+}
+.brown tr.footer,
+.brown a.footer {
+  background-color: #7E634C;
+  color: #FFFFFF;
+  font-size: 10px;
+}
+.brown td.onreq_odd {
+  background-color: #F4F1E7;
+}
+.brown td.onreq_even {
+  background-color: #FCFCFC;
+}
+.brown td.available_odd {
+  background-color: #F4F1E7;
+}
+.brown td.available_even {
+  background-color: #FCFCFC;
+}
+.brown .ui-widget-header {
+  background-color: #7E634C;
+  border-color: #7E634C;
+}
+.brown .ui-state-hover {
+  background-color: #7E634C;
+  border-color: #7E634C;
+}
+.brown .ui-state-active {
+  background-color: #7E634C;
+  border-color: #7E634C;
+  color: #FFFFFF;
+}
+.brown .ui-state-highlight,
+.brown .ui-state-highlight:hover {
+  background: #F8DA4E;
+  border: 1px solid #FCD113;
+  color: #915608;
+}
+.green tr.oddrow {
+  background-color: #F4F1E7;
+}
+.green tr.evenrow {
+  background-color: #FCFCFC;
+}
+.green tr.header {
+  background-color: #93BF00;
+  color: #FFFFFF;
+}
+.green tr.footer,
+.green a.footer {
+  background-color: #93BF00;
+  color: #FFFFFF;
+}
+.green td.onreq_odd {
+  background-color: #F4F1E7;
+}
+.green td.onreq_even {
+  background-color: #FCFCFC;
+}
+.green td.available_odd {
+  background-color: #F4F1E7;
+}
+.green td.available_even {
+  background-color: #FCFCFC;
+}
+.green .ui-widget-header {
+  background-color: #93BF00;
+  border-color: #93BF00;
+}
+.green .ui-state-hover {
+  background-color: #93BF00;
+  border-color: #93BF00;
+}
+.green .ui-state-active {
+  background-color: #93BF00;
+  border-color: #93BF00;
+  color: #FFFFFF;
+}
+.green .ui-state-highlight,
+.green .ui-state-highlight:hover {
+  background: #F8DA4E;
+  border: 1px solid #FCD113;
+  color: #915608;
+}
+.orange tr.oddrow {
+  background-color: #F4F1E7;
+}
+.orange tr.evenrow {
+  background-color: #FCFCFC;
+}
+.orange tr.header {
+  background-color: #F38630;
+  color: #FFFFFF;
+}
+.orange tr.footer,
+.orange a.footer {
+  background-color: #F38630;
+  color: #FFFFFF;
+}
+.orange td.onreq_odd {
+  background-color: #F4F1E7;
+}
+.orange td.onreq_even {
+  background-color: #FCFCFC;
+}
+.orange td.available_odd {
+  background-color: #F4F1E7;
+}
+.orange td.available_even {
+  background-color: #FCFCFC;
+}
+.orange .ui-widget-header {
+  background-color: #F38630;
+  border-color: #F38630;
+}
+.orange .ui-state-hover {
+  background-color: #F38630;
+  border-color: #F38630;
+}
+.orange .ui-state-active {
+  background-color: #F38630;
+  border-color: #F38630;
+  color: #FFFFFF;
+}
+.orange .ui-state-highlight,
+.orange .ui-state-highlight:hover {
+  background: #F8DA4E;
+  border: 1px solid #FCD113;
+  color: #915608;
+}
+.pink tr.oddrow {
+  background-color: #F4F1E7;
+}
+.pink tr.evenrow {
+  background-color: #FCFCFC;
+}
+.pink tr.header {
+  background-color: #FE4365;
+  color: #FFFFFF;
+}
+.pink tr.footer,
+.pink a.footer {
+  background-color: #FE4365;
+  color: #FFFFFF;
+}
+.pink td.onreq_odd {
+  background-color: #F4F1E7;
+}
+.pink td.onreq_even {
+  background-color: #FCFCFC;
+}
+.pink td.available_odd {
+  background-color: #F4F1E7;
+}
+.pink td.available_even {
+  background-color: #FCFCFC;
+}
+.pink .ui-widget-header {
+  background-color: #FE4365;
+  border-color: #FE4365;
+}
+.pink .ui-state-hover {
+  background-color: #FE4365;
+  border-color: #FE4365;
+}
+.pink .ui-state-active {
+  background-color: #FE4365;
+  border-color: #FE4365;
+  color: #FFFFFF;
+}
+.pink .ui-state-highlight,
+.pink .ui-state-highlight:hover {
+  background: #F8DA4E;
+  border: 1px solid #FCD113;
+  color: #915608;
+}
+.purple tr.oddrow {
+  background-color: #F4F1E7;
+}
+.purple tr.evenrow {
+  background-color: #FCFCFC;
+}
+.purple tr.header {
+  background-color: #601848;
+  color: #FFFFFF;
+}
+.purple tr.footer,
+.purple a.footer {
+  background-color: #601848;
+  color: #FFFFFF;
+}
+.purple td.onreq_odd {
+  background-color: #F4F1E7;
+}
+.purple td.onreq_even {
+  background-color: #FCFCFC;
+}
+.purple td.available_odd {
+  background-color: #F4F1E7;
+}
+.purple td.available_even {
+  background-color: #FCFCFC;
+}
+.purple .ui-widget-header {
+  background-color: #601848;
+  border-color: #601848;
+}
+.purple .ui-state-hover {
+  background-color: #601848;
+  border-color: #601848;
+}
+.purple .ui-state-active {
+  background-color: #601848;
+  border-color: #601848;
+  color: #FFFFFF;
+}
+.purple .ui-state-highlight,
+.purple .ui-state-highlight:hover {
+  background: #F8DA4E;
+  border: 1px solid #FCD113;
+  color: #915608;
+}
+.red tr.oddrow {
+  background-color: #F4F1E7;
+}
+.red tr.evenrow {
+  background-color: #FCFCFC;
+}
+.red tr.header {
+  background-color: #B11623;
+  color: #FFFFFF;
+}
+.red tr.footer,
+.red a.footer {
+  background-color: #B11623;
+  color: #FFFFFF;
+}
+.red td.onreq_odd {
+  background-color: #F4F1E7;
+}
+.red td.onreq_even {
+  background-color: #FCFCFC;
+}
+.red td.available_odd {
+  background-color: #F4F1E7;
+}
+.red td.available_even {
+  background-color: #FCFCFC;
+}
+.red .ui-widget-header {
+  background-color: #B11623;
+  border-color: #B11623;
+}
+.red .ui-state-hover {
+  background-color: #B11623;
+  border-color: #B11623;
+}
+.red .ui-state-active {
+  background-color: #B11623;
+  border-color: #B11623;
+  color: #FFFFFF;
+}
+.red .ui-state-highlight,
+.red .ui-state-highlight:hover {
+  background: #F8DA4E;
+  border: 1px solid #FCD113;
+  color: #915608;
+}
+.slate tr.oddrow {
+  background-color: #F4F1E7;
+}
+.slate tr.evenrow {
+  background-color: #FCFCFC;
+}
+.slate tr.header {
+  background-color: #5A5F70;
+  color: #FFFFFF;
+}
+.slate tr.footer,
+.slate a.footer {
+  background-color: #5A5F70;
+  color: #FFFFFF;
+}
+.slate td.onreq_odd {
+  background-color: #F4F1E7;
+}
+.slate td.onreq_even {
+  background-color: #FCFCFC;
+}
+.slate td.available_odd {
+  background-color: #F4F1E7;
+}
+.slate td.available_even {
+  background-color: #FCFCFC;
+}
+.slate .ui-widget-header {
+  background-color: #5A5F70;
+  border-color: #5A5F70;
+}
+.slate .ui-state-hover {
+  background-color: #5A5F70;
+  border-color: #5A5F70;
+}
+.slate .ui-state-active {
+  background-color: #5A5F70;
+  border-color: #5A5F70;
+  color: #FFFFFF;
+}
+.slate .ui-state-highlight,
+.slate .ui-state-highlight:hover {
+  background: #F8DA4E;
+  border: 1px solid #FCD113;
+  color: #915608;
+}
